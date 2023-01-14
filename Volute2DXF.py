@@ -87,7 +87,7 @@ class export():
         A = np.matrix([[2*(x-xprim), 2*(y-yprim), 2*(z-zprim)],
                        [V[0], V[1], V[2]],
                        [Vprim[0], Vprim[1], Vprim[2]]])
-        C = np.matrix([[], [V[0]*x + V[1]*y + V[2]*z], [Vprim[0]*xprim + Vprim[1]*yprim + zprim*Vprim[2]]])
+        C = np.matrix([[x**2-xprim**2+y**2-yprim**2+z**2-zprim**2], [V[0]*x + V[1]*y + V[2]*z], [Vprim[0]*xprim + Vprim[1]*yprim + zprim*Vprim[2]]])
         CenterPoint = np.linalg.inv(A)*C # Position dans le WCS du centre de l'arc tangent aux deux droites
         Radius = np.linalg.norm(CenterPoint-np.array([x, y, z]))
         Ez = np.linalg.cross(CenterPoint-np.array([x, y, z]), CenterPoint-np.array([xprim, yprim, zprim]))/np.linalg.norm(np.linalg.cross(CenterPoint-np.array([x, y, z]), CenterPoint-np.array([xprim, yprim, zprim])))
@@ -169,6 +169,9 @@ class export():
         z = px * self.Wz[0] + py * self.Wz[1] + pz * self.Wz[2]
         return np.array([x, y, z])
 
-#os.remove(r"/Users/yvan/Desktop/Venture Orbital System/Export_2_DXF/Test.dxf")
+try :
+    os.remove(r"/Users/yvan/Desktop/Venture Orbital System/Export_2_DXF/Test.dxf")
+except:
+    None
 E=export("Test.dxf", r"/Users/yvan/Desktop/Venture Orbital System/Export_2_DXF")
 E.Export2DXF()
