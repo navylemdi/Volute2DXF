@@ -3,6 +3,12 @@ import os
 
 class export():
     def __init__(self, name, path): # add volute according to data type and shape
+        """Create DXF file from point cloud
+
+        Args:
+            name (str): name of the DXF file
+            path (str): path of the folder to save the DXF file
+        """
         #self.A = volute.A
         #self.B = volute.B
         #self.C = volute.C
@@ -12,11 +18,10 @@ class export():
         self.path = path
         #self.PAA = volute.A-self.ProjectA
         #self.BC = volute.C-volute.B
-        self.Wx = self.wcs_to_ocs((1, 0, 0))
-        self.Wy = self.wcs_to_ocs((0, 1, 0))
-        self.Wz = self.wcs_to_ocs((0, 0, 1))
 
     def Export2DXF(self):
+        """Export to DXF file
+        """
         self.Create_DXF_File()
         self.Write_Header()
         self.Write_Sections()
@@ -93,7 +98,9 @@ class export():
             v=np.cross(np.array([0, 0, 1]), Ez)
             Ex = v/np.linalg.norm(v)  # the cross-product operator
         Ey = np.cross(Ez,Ex)/np.linalg.norm(np.cross(Ez,Ex))
-
+        self.Wx = self.wcs_to_ocs((1, 0, 0), Ex, Ey, Ez)
+        self.Wy = self.wcs_to_ocs((0, 1, 0), Ex, Ey, Ez)
+        self.Wz = self.wcs_to_ocs((0, 0, 1), Ex, Ey, Ez)
         CenterPointOCS=self.wcs_to_ocs(CenterPoint, Ex, Ey, Ez)
 
         Start_Angle = np.arccos(np.dot(CenterPointOCS+Ex, np.array([x, y, z])+CenterPointOCS))*180/np.pi
@@ -162,6 +169,6 @@ class export():
         z = px * self.Wz[0] + py * self.Wz[1] + pz * self.Wz[2]
         return np.array([x, y, z])
 
-os.remove(r"/Users/yvan/Desktop/Venture Orbital System/Export_2_DXF/Test.dxf")
+#os.remove(r"/Users/yvan/Desktop/Venture Orbital System/Export_2_DXF/Test.dxf")
 E=export("Test.dxf", r"/Users/yvan/Desktop/Venture Orbital System/Export_2_DXF")
 E.Export2DXF()
